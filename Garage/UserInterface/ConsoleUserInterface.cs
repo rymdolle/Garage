@@ -1,6 +1,6 @@
 ﻿namespace Garage.UserInterface;
 
-internal class ConsoleUserInterface : IUserInterface
+public class ConsoleUserInterface : IUserInterface
 {
     public string ReadLine()
     {

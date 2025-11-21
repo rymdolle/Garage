@@ -1,5 +1,5 @@
 ﻿namespace Garage;
 
-internal class GarageHandler : IHandler
+public class GarageHandler : IHandler
 {
 }

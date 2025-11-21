@@ -1,5 +1,5 @@
 ﻿namespace Garage;
 
-internal interface IHandler
+public interface IHandler
 {
 }

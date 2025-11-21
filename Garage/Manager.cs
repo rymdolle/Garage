@@ -2,7 +2,7 @@
 
 namespace Garage;
 
-internal class Manager
+public class Manager
 {
     private IUserInterface _ui;
     private IHandler _handler;
