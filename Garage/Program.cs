@@ -6,7 +6,7 @@ internal class Program
 {
     static void Main(string[] args)
     {
-        Handler handler = new();
+        IHandler handler = new GarageHandler();
         IUserInterface ui = new ConsoleUserInterface();
         Manager manager = new(ui, handler);
         manager.Run();
