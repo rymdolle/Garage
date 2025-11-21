@@ -98,4 +98,42 @@ public class GarageTest
         Assert.False(result2);
         Assert.Equal(1, garage.Count);
     }
+
+    [Fact]
+    public void Garage_FindByRegNr_ReturnsCorrectVehicle()
+    {
+        // Arrange
+        var garage = new Garage<Vehicle>(2);
+        string regnr = "XYZ789";
+        var car1 = new Car("ABC123");
+        var car2 = new Car(regnr);
+        garage.Add(car1);
+        garage.Add(car2);
+        // Act
+        var foundCar = garage.FindByRegNr(regnr);
+        // Assert
+        Assert.NotNull(foundCar);
+        Assert.Equal(regnr, foundCar.RegistrationNumber);
+    }
+
+    [Fact]
+    public void Garage_SearchByColor_SingleMatch()
+    {
+        // Arrange
+        var garage = new Garage<Vehicle>(2);
+        var car1 = new Car("ABC123")
+        {
+            Color = "Black"
+        };
+        var car2 = new Car("XYZ789")
+        {
+            Color = "Red"
+        };
+        garage.Add(car1);
+        garage.Add(car2);
+        // Act
+        var redCars = garage.Where(v => (v as Car)!.Color == "Red").ToList();
+        // Assert
+        Assert.Single(redCars);
+    }
 }
