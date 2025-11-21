@@ -28,6 +28,16 @@ public sealed class Garage<T> : IEnumerable<T> where T : Vehicle
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     /// <summary>
+    /// Find vehicle by registration number.
+    /// </summary>
+    /// <param name="regnr"></param>
+    /// <returns>Returns vehicle or null</returns>
+    public T? FindByRegNr(string regnr)
+    {
+        return this.FirstOrDefault(v => regnr.Equals(v.RegistrationNumber, StringComparison.OrdinalIgnoreCase));
+    }
+
+    /// <summary>
     /// Add vehicle to garage.
     /// </summary>
     /// <param name="item"></param>
@@ -36,7 +46,7 @@ public sealed class Garage<T> : IEnumerable<T> where T : Vehicle
     {
         if (Count >= Capacity)
             return false;
-        if (_parking.Any(v => item.RegistrationNumber.Equals(v?.RegistrationNumber, StringComparison.OrdinalIgnoreCase)))
+        if (FindByRegNr(item.RegistrationNumber) != null)
             return false;
 
         for (int i = 0; i < _parking.Length; i++)
