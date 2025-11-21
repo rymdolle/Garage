@@ -1,0 +1,19 @@
+﻿using Garage.UserInterface;
+
+namespace Garage;
+
+internal class Manager
+{
+    private IUserInterface _ui;
+    private IHandler _handler;
+    public Manager(IUserInterface ui, IHandler handler)
+    {
+        _ui = ui;
+        _handler = handler;
+    }
+
+    internal void Run()
+    {
+        throw new NotImplementedException();
+    }
+}
