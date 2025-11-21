@@ -14,6 +14,8 @@ internal class Manager
 
     internal void Run()
     {
-        throw new NotImplementedException();
+        _ui.WriteLine("Garage Manager is running. Press Enter to stop.");
+        _ui.ReadLine();
+        _ui.WriteLine("Garage Manager has stopped.");
     }
 }
