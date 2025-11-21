@@ -15,7 +15,7 @@ public class GarageTest
     {
         // Arrange
         var garage = new Garage<Vehicle>(1);
-        var car = new Car();
+        var car = new Car("ABC123");
         // Act
         var result = garage.Add(car);
         // Assert
@@ -28,8 +28,8 @@ public class GarageTest
     {
         // Arrange
         var garage = new Garage<Vehicle>(1);
-        var car1 = new Car();
-        var car2 = new Car();
+        var car1 = new Car("ABC123");
+        var car2 = new Car("ABC124");
         // Act
         garage.Add(car1);
         var result = garage.Add(car2);
@@ -43,7 +43,7 @@ public class GarageTest
     {
         // Arrange
         var garage = new Garage<Vehicle>(1);
-        var car = new Car();
+        var car = new Car("ABC123");
         garage.Add(car);
         // Act
         var result = garage.Remove(car);
@@ -57,13 +57,45 @@ public class GarageTest
     {
         // Arrange
         var garage = new Garage<Vehicle>(1);
-        var car1 = new Car();
-        var car2 = new Car();
+        var car1 = new Car("ABC123");
+        var car2 = new Car("ABC124");
         garage.Add(car1);
         // Act
         var result = garage.Remove(car2);
         // Assert
         Assert.False(result);
+        Assert.Equal(1, garage.Count);
+    }
+
+    [Fact]
+    public void Garage_UniqueRegistrationNumber_Enforced()
+    {
+        // Arrange
+        var garage = new Garage<Vehicle>(2);
+        var car1 = new Car("ABC123");
+        var car2 = new Car("ABC123"); // Same registration number
+        // Act
+        var result1 = garage.Add(car1);
+        var result2 = garage.Add(car2);
+        // Assert
+        Assert.True(result1);
+        Assert.False(result2);
+        Assert.Equal(1, garage.Count);
+    }
+
+    [Fact]
+    public void Garage_NumberPlateCaseSensitivity_Enforced()
+    {
+        // Arrange
+        var garage = new Garage<Vehicle>(2);
+        var car1 = new Car("abc123");
+        var car2 = new Car("ABC123"); // Different case
+        // Act
+        var result1 = garage.Add(car1);
+        var result2 = garage.Add(car2);
+        // Assert
+        Assert.True(result1);
+        Assert.False(result2);
         Assert.Equal(1, garage.Count);
     }
 }

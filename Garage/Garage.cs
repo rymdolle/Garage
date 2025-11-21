@@ -34,16 +34,19 @@ public sealed class Garage<T> : IEnumerable<T> where T : Vehicle
     /// <returns>True if operation is successful</returns>
     public bool Add(T item)
     {
-        if (Count < Capacity)
+        if (Count >= Capacity)
+            return false;
+        if (_parking.Any(v => item.RegistrationNumber.Equals(v?.RegistrationNumber, StringComparison.OrdinalIgnoreCase)))
+            return false;
+
+        for (int i = 0; i < _parking.Length; i++)
         {
-            for (int i = 0; i < _parking.Length; i++)
+            // Insert into first spot that is null
+            if (_parking[i] == null)
             {
-                if (_parking[i] == null)
-                {
-                    _parking[i] = item;
-                    Count++;
-                    return true;
-                }
+                _parking[i] = item;
+                Count++;
+                return true;
             }
         }
 
