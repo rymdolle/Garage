@@ -17,10 +17,14 @@ public sealed class Garage<T> : IEnumerable<T> where T : Vehicle
 
     public IEnumerator<T> GetEnumerator()
     {
+        int index = 0;
         foreach (var vehicle in _parking)
         {
+            if (index >= Count)
+                yield break;
             if (vehicle != null)
             {
+                index++;
                 yield return vehicle;
             }
         }
@@ -38,16 +42,17 @@ public sealed class Garage<T> : IEnumerable<T> where T : Vehicle
     }
 
     /// <summary>
-    /// Add vehicle to garage.
+    /// Adds a vehicle to the garage if space is available and the registration number is unique.
     /// </summary>
-    /// <param name="item"></param>
-    /// <returns>True if operation is successful</returns>
-    public bool Add(T item)
+    /// <param name="item">The vehicle to add to the garage.</param>
+    /// <exception cref="InvalidOperationException">Thrown if the garage is full or if a vehicle with the same registration number already exists in the garage.</exception>
+    public void Add(T item)
     {
+        ArgumentNullException.ThrowIfNull(item, nameof(item));
         if (Count >= Capacity)
-            return false;
+            throw new InvalidOperationException("Garage is full");
         if (FindByRegNr(item.RegistrationNumber) != null)
-            return false;
+            throw new InvalidOperationException("RegistrationNumber has to be unique");
 
         for (int i = 0; i < _parking.Length; i++)
         {
@@ -56,11 +61,11 @@ public sealed class Garage<T> : IEnumerable<T> where T : Vehicle
             {
                 _parking[i] = item;
                 Count++;
-                return true;
+                return;
             }
         }
 
-        return false;
+        throw new InvalidOperationException("Could not add item");
     }
 
     /// <summary>

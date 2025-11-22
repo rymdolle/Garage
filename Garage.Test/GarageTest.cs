@@ -17,9 +17,8 @@ public class GarageTest
         var garage = new Garage<Vehicle>(1);
         var car = new Car("ABC123");
         // Act
-        var result = garage.Add(car);
+        garage.Add(car);
         // Assert
-        Assert.True(result);
         Assert.Equal(1, garage.Count);
     }
 
@@ -32,10 +31,9 @@ public class GarageTest
         var car2 = new Car("ABC124");
         // Act
         garage.Add(car1);
-        var result = garage.Add(car2);
         // Assert
-        Assert.False(result);
         Assert.Equal(1, garage.Count);
+        Assert.Throws<InvalidOperationException>(() => garage.Add(car2));
     }
 
     [Fact]
@@ -75,12 +73,10 @@ public class GarageTest
         var car1 = new Car("ABC123");
         var car2 = new Car("ABC123"); // Same registration number
         // Act
-        var result1 = garage.Add(car1);
-        var result2 = garage.Add(car2);
+        garage.Add(car1);
         // Assert
-        Assert.True(result1);
-        Assert.False(result2);
         Assert.Equal(1, garage.Count);
+        Assert.Throws<InvalidOperationException>(() => garage.Add(car2));
     }
 
     [Fact]
@@ -91,12 +87,10 @@ public class GarageTest
         var car1 = new Car("abc123");
         var car2 = new Car("ABC123"); // Different case
         // Act
-        var result1 = garage.Add(car1);
-        var result2 = garage.Add(car2);
+        garage.Add(car1);
         // Assert
-        Assert.True(result1);
-        Assert.False(result2);
         Assert.Equal(1, garage.Count);
+        Assert.Throws<InvalidOperationException>(() => garage.Add(car2));
     }
 
     [Fact]
