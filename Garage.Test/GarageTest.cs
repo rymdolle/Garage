@@ -104,7 +104,7 @@ public class GarageTest
         garage.Add(car1);
         garage.Add(car2);
         // Act
-        var foundCar = garage.FindByRegNr(regnr);
+        var foundCar = garage.GetVehicleByRegNr(regnr);
         // Assert
         Assert.NotNull(foundCar);
         Assert.Equal(regnr, foundCar.RegistrationNumber);

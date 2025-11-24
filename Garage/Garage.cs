@@ -36,7 +36,7 @@ public sealed class Garage<T> : IEnumerable<T> where T : Vehicle
     /// </summary>
     /// <param name="regnr"></param>
     /// <returns>Returns vehicle or null</returns>
-    public T? FindByRegNr(string regnr)
+    public T? GetVehicleByRegNr(string regnr)
     {
         return this.FirstOrDefault(v => regnr.Equals(v.RegistrationNumber, StringComparison.OrdinalIgnoreCase));
     }
@@ -51,7 +51,7 @@ public sealed class Garage<T> : IEnumerable<T> where T : Vehicle
         ArgumentNullException.ThrowIfNull(item, nameof(item));
         if (Count >= Capacity)
             throw new InvalidOperationException("Garage is full");
-        if (FindByRegNr(item.RegistrationNumber) != null)
+        if (GetVehicleByRegNr(item.RegistrationNumber) != null)
             throw new InvalidOperationException("RegistrationNumber has to be unique");
 
         for (int i = 0; i < _parking.Length; i++)
