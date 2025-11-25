@@ -4,24 +4,25 @@ namespace Garage;
 
 public class GarageHandler : IHandler
 {
+    Garage<Vehicle> _garage = new(199);
     public void AddVehicle(Vehicle vehicle)
     {
-        throw new NotImplementedException();
+        _garage.Add(vehicle);
     }
 
     public Vehicle? GetVehicleByRegNr(string regnr)
     {
-        throw new NotImplementedException();
+        return _garage.GetVehicleByRegNr(regnr);
     }
 
     public IEnumerable<Vehicle> GetAllVehicles()
     {
-        throw new NotImplementedException();
+        return _garage;
     }
 
     public bool RemoveVehicle(Vehicle vehicle)
     {
-        throw new NotImplementedException();
+        return _garage.Remove(vehicle);
     }
 
     /// <summary>
@@ -32,6 +33,30 @@ public class GarageHandler : IHandler
     /// <returns></returns>
     public IEnumerable<Vehicle> SearchVehicle(string query)
     {
-        throw new NotImplementedException();
+        var filters = query.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+            .Select(part => part.Split('=', 2))
+            .Where(parts => parts.Length == 2)
+            .ToDictionary(parts => parts[0].ToLower(),
+                          parts => parts[1].Split(',', StringSplitOptions.RemoveEmptyEntries).Select(s => s.ToLower()).ToList());
+        IEnumerable<Vehicle> result = _garage;
+        foreach (var filter in filters)
+        {
+            switch (filter.Key)
+            {
+                case "color":
+                    result = result.Where(v => filter.Value.Contains(v.Color?.ToLower() ?? string.Empty));
+                    break;
+                case "type":
+                    result = result.Where(v => filter.Value.Contains(v.GetType().Name.ToLower()));
+                    break;
+                case "regnr":
+                    result = result.Where(v => filter.Value.Contains(v.RegistrationNumber.ToLower()));
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        return result;
     }
 }

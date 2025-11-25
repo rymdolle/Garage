@@ -13,7 +13,7 @@ public class Manager
         _handler = handler;
     }
 
-    internal void Run()
+    public void Run()
     {
         Menu mainMenu = new Menu("Main menu");
         Menu? menu = new Menu("Main Menu", [
