@@ -1,12 +1,23 @@
-﻿using System.Drawing;
+﻿namespace Garage.Vehicles;
 
-namespace Garage.Vehicles;
-
-public class Car(string regnr, string? color = null) : Vehicle(regnr)
+public class Car(string regnr) : Vehicle(regnr)
 {
-    public string? Color { get; set; } = color;
+    public BodyType Body { get; set; }
     public override string ToString()
     {
-        return @$"{GetType().Name} - RegNr: {RegistrationNumber}, Color: {Color ?? "Undefined"}";
+        return @$"{GetType().Name} - RegNr: {RegistrationNumber}, BodyType: {Body}";
+    }
+
+    public enum BodyType
+    {
+        Undefined,
+        Sedan,
+        Coupe,
+        Hatchback,
+        SUV,
+        Convertible,
+        Wagon,
+        Van,
+        Truck,
     }
 }
