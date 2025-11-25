@@ -4,6 +4,7 @@ namespace Garage;
 
 public interface IHandler
 {
+    void CreateGarage(int capacity);
     IEnumerable<Vehicle> GetAllVehicles();
     void AddVehicle(Vehicle vehicle);
     bool RemoveVehicle(Vehicle vehicle);

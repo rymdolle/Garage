@@ -12,23 +12,21 @@ public class ConsoleUserInterface : IUserInterface
         Console.Clear();
     }
 
-    public int SelectMenuOption(string prompt, (int, string)[] options, string errorMessage)
+    public int SelectMenuOption(string prompt, Menu options, string errorMessage)
     {
         // Display menu
         Console.WriteLine(prompt);
-        foreach (var (index, item) in options)
-            Console.WriteLine($"{index}. {item}");
+        for (int i = 0; i < options.Children.Count; i++)
+            Console.WriteLine($"{i + 1}. {options.Children[i].Title}");
+        string parentText = options.Parent == null ? "Exit" : "Back";
+        Console.WriteLine($"0. {parentText}");
 
         while (true)
         {
             var input = Console.ReadLine();
-            if (int.TryParse(input, out int choice))
+            if (int.TryParse(input, out int choice) && choice >= 0 && choice <= options.Children.Count)
             {
-                foreach (var (index, item) in options)
-                {
-                    if (index == choice)
-                        return choice;
-                }
+                return choice;
             }
 
             WriteError(errorMessage);
@@ -50,5 +48,32 @@ public class ConsoleUserInterface : IUserInterface
         Console.ForegroundColor = ConsoleColor.Red;
         Console.WriteLine(message);
         Console.ResetColor();
+    }
+
+    public int ReadInt(string prompt, Predicate<int> constraint, string errorMessage)
+    {
+        while (true)
+        {
+            WriteLine(prompt);
+            if (int.TryParse(ReadLine(), out int result) && constraint(result))
+            {
+                return result;
+            }
+            WriteError(errorMessage);
+        }
+    }
+
+    public string ReadString(string prompt, Predicate<string> constraint, string errorMessage)
+    {
+        while (true)
+        {
+            WriteLine(prompt);
+            string input = ReadLine();
+            if (constraint(input))
+            {
+                return input;
+            }
+            WriteError(errorMessage);
+        }
     }
 }

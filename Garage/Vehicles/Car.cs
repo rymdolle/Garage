@@ -1,23 +1,10 @@
 ﻿namespace Garage.Vehicles;
 
-public class Car(string regnr, Car.BodyType body) : Vehicle(regnr)
+public class Car(string regnr, string bodyType) : Vehicle(regnr)
 {
-    public BodyType Body { get; set; } = body;
+    public string BodyType { get; set; } = bodyType;
     public override string ToString()
     {
-        return @$"{GetType().Name} - RegNr: {RegistrationNumber}, BodyType: {Body}";
-    }
-
-    public enum BodyType
-    {
-        Undefined,
-        Sedan,
-        Coupe,
-        Hatchback,
-        SUV,
-        Convertible,
-        Wagon,
-        Van,
-        Truck,
+        return @$"{GetType().Name} - RegNr: {RegistrationNumber}, BodyType: {BodyType}";
     }
 }

@@ -7,110 +7,137 @@ public class Manager
 {
     private IUserInterface _ui;
     private IHandler _handler;
+
+    private Menu _mainMenu;
     public Manager(IUserInterface ui, IHandler handler)
     {
         _ui = ui;
         _handler = handler;
-    }
 
-    public void Run()
-    {
-        Menu mainMenu = new Menu("Main menu");
-        Menu? menu = new Menu("Main Menu", [
+        _mainMenu = new("Garage", [
             new Menu("List all vehicles", ListAllVehicles),
             new Menu("Park vehicle", AddVehicle),
             new Menu("Remove vehicle", RemoveVehicle),
             new Menu("Search vehicle", SearchVehicle),
             new Menu("Mock vehicles", CreateMockVehicles),
-            ]
-        );
+            ]);
+    }
+
+    public void Run()
+    {
+        _ui.WriteLine("Welcome to Parkin Garage Application!");
+        int capacity = _ui.ReadInt("Choose garage capacity:", c => c > 0, "Capacity has to be more than 0");
+        _handler.CreateGarage(capacity);
+
+        Menu? menu = _mainMenu;
         while (menu != null)
         {
             menu = menu.Navigate(_ui);
         }
     }
-            {
-                _ui.WriteError($"An error occurred: {ex.Message}");
-            }
-        } while (menu != null);
-    }
 
-    private void AddVehicle(IUserInterface ui)
+    private void AddVehicle(Menu parent)
     {
-        ui.WriteLine("Select vehicle type to park:");
-        var options = new (int, string)[]
-        {
-            (1, "Car"),
-            (2, "Motorcycle"),
-            (3, "Bus"),
-            (4, "Airplane"),
-            (5, "Boat"),
-            (0, "Cancel"),
-        };
-        int choice = ui.SelectMenuOption("Vehicle Types:", options, "Invalid selection. Please try again.");
-        if (choice == 0)
-            return;
-        ui.WriteLine("Enter registration number:");
-        string regnr = ui.ReadLine();
+        var options = new Menu("Add vehicle", [
+            new Menu("Car", CreateCar),
+            new Menu("Motorcycle", CreateMotorcycle),
+            new Menu("Bus", CreateBus),
+            new Menu("Airplane", CreateAirplane),
+            new Menu("Boat", CreateBoat),
+        ]);
+        options.Parent = parent;
+        Menu? menu = options;
         try
         {
-            Vehicle vehicle = choice switch
-            {
-                1 => new Car(regnr, Car.BodyType.Undefined),
-                2 => new Motorcycle(regnr, maxLeanAngle: 24),
-                3 => new Bus(regnr, seatingCapacity: 12),
-                4 => new Airplane(regnr, wingspan: 10),
-                5 => new Boat(regnr, displacement: 40),
-                _ => throw new InvalidOperationException("Invalid vehicle type selected.")
-            };
-            _handler.AddVehicle(vehicle);
-            ui.WriteLine($"Vehicle {vehicle} parked in the garage.");
+            while (menu != null && menu != parent)
+                menu = menu.Navigate(_ui);
         }
-        catch (Exception ex)
+        catch (Exception e)
         {
-            ui.WriteError($"Error parking vehicle: {ex.Message}");
+            _ui.WriteError(e.Message);
         }
     }
 
-    private void RemoveVehicle(IUserInterface ui)
+    private void CreateCar(Menu parent)
     {
-        ui.WriteLine("Enter registration number of the vehicle to remove:");
-        string regnr = ui.ReadLine();
+        string regnr = _ui.ReadString("Enter registration number:", c => c != string.Empty, "Regnr can't be empty");
+        string body = _ui.ReadString("Enter body type:", c => c != string.Empty, "Body type can't be empty");
+        _handler.AddVehicle(new Car(regnr, body));
+        _ui.WriteLine("Car created.");
+    }
+    private void CreateMotorcycle(Menu menu)
+    {
+        string regnr = _ui.ReadString("Enter registration number:", c => c != string.Empty, "Regnr can't be empty");
+        int leanAngle = _ui.ReadInt("Enter max lean angle:", c => c > 0, "Lean angle has to be more than 0");
+        _handler.AddVehicle(new Motorcycle(regnr, leanAngle));
+        _ui.WriteLine("Motorcycle created.");
+
+    }
+
+    private void CreateBus(Menu menu)
+    {
+        string regnr = _ui.ReadString("Enter registration number:", c => c != string.Empty, "Regnr can't be empty");
+        int seats = _ui.ReadInt("Enter seat capacity:", c => c > 0, "Capacity has to be more than 0");
+        _handler.AddVehicle(new Motorcycle(regnr, seats));
+        _ui.WriteLine("Bus created.");
+    }
+
+    private void CreateAirplane(Menu menu)
+    {
+        string regnr = _ui.ReadString("Enter registration number:", c => c != string.Empty, "Regnr can't be empty");
+        int wingspan = _ui.ReadInt("Enter wing span:", c => c > 0, "Wing span has to be more than 0");
+        _handler.AddVehicle(new Airplane(regnr, wingspan));
+        _ui.WriteLine("Airplane created.");
+    }
+
+    private void CreateBoat(Menu menu)
+    {
+        string regnr = _ui.ReadString("Enter registration number:", c => c != string.Empty, "Regnr can't be empty");
+        int displacement = _ui.ReadInt("Enter displacement:", c => c > 0, "displacement has to be more than 0");
+        _handler.AddVehicle(new Boat(regnr, displacement));
+        _ui.WriteLine("Boat created.");
+    }
+
+
+    private void RemoveVehicle(Menu parent)
+    {
+        _ui.WriteLine("Enter registration number of the vehicle to remove:");
+        string regnr = _ui.ReadLine();
         var vehicle = _handler.GetVehicleByRegNr(regnr);
         if (vehicle == null)
         {
-            ui.WriteError($"No vehicle found with registration number {regnr}.");
+            _ui.WriteError($"No vehicle found with registration number {regnr}.");
             return;
         }
         if (_handler.RemoveVehicle(vehicle))
         {
-            ui.WriteLine($"Vehicle {vehicle.RegistrationNumber} removed from the garage.");
+            _ui.WriteLine($"Vehicle {vehicle.RegistrationNumber} removed from the garage.");
         }
         else
         {
-            ui.WriteError($"Failed to remove vehicle {vehicle}.");
+            _ui.WriteError($"Failed to remove vehicle {vehicle}.");
         }
     }
 
-    private void SearchVehicle(IUserInterface ui)
+    private void SearchVehicle(Menu parent)
     {
-        ui.WriteLine("Enter search query (e.g., color=red type=car regnr=ABC123):");
-        string query = ui.ReadLine();
+        _ui.WriteLine("Enter search query (e.g., color=red type=car regnr=ABC123):");
+        string query = _ui.ReadLine();
         var results = _handler.SearchVehicle(query);
         if (!results.Any())
         {
-            ui.WriteLine("No vehicles found matching the query.");
+            _ui.WriteLine("No vehicles found matching the query.");
             return;
         }
 
-        ui.WriteLine("Search Results:");
+        _ui.WriteLine("Search Results:");
         foreach (var vehicle in results)
         {
-            ui.WriteLine(vehicle.ToString());
+            _ui.WriteLine(vehicle.ToString());
         }
     }
 
-    private void ListAllVehicles(IUserInterface ui)
+    private void ListAllVehicles(Menu parent)
     {
         var vehicles = _handler.GetAllVehicles();
         if (!vehicles.Any())
@@ -124,48 +151,63 @@ public class Manager
         }
     }
 
-    private void CreateMockVehicles(IUserInterface ui)
+    private void CreateMockVehicles(Menu parent)
     {
-        _handler.AddVehicle(new Car("ABC123", Car.BodyType.Hatchback)
+        Vehicle[] vehicles = [
+            new Car("ABC123", "Sedan")
+            {
+                Color = "Red"
+            },
+            new Motorcycle("XYZ789", maxLeanAngle: 24)
+            {
+                Color = "Black"
+            },
+            new Bus("BUS456", seatingCapacity: 56)
+            {
+                Color = "Blue"
+            },
+            new Bus("BUS457", seatingCapacity: 56)
+            {
+                Color = "Green"
+            },
+            new Bus("BUS458", seatingCapacity: 40)
+            {
+                Color = "Yellow"
+            },
+            new Bus("BUS459", seatingCapacity: 32)
+            {
+                Color = "Yellow"
+            },
+            new Bus("BUS451", seatingCapacity: 22)
+            {
+                Color = "Red"
+            },
+            new Bus("BUS452", seatingCapacity: 22)
+            {
+                Color = "Red"
+            },
+            new Bus("BUS453", seatingCapacity: 18)
+            {
+                Color = "Red"
+            },
+            new Bus("BUS454", seatingCapacity: 92)
+            {
+                Color = "White"
+            },
+            ];
+        int total = 0;
+        foreach (Vehicle vehicle in vehicles)
         {
-            Color = "Red"
-        });
-        _handler.AddVehicle(new Motorcycle("XYZ789", maxLeanAngle: 24)
-        {
-            Color = "Black"
-        });
-        _handler.AddVehicle(new Bus("BUS456", seatingCapacity: 56)
-        {
-            Color = "Blue"
-        });
-        _handler.AddVehicle(new Bus("BUS457", seatingCapacity: 56)
-        {
-            Color = "Green"
-        });
-        _handler.AddVehicle(new Bus("BUS458", seatingCapacity: 40)
-        {
-            Color = "Yellow"
-        });
-        _handler.AddVehicle(new Bus("BUS459", seatingCapacity: 32)
-        {
-            Color = "Yellow"
-        });
-        _handler.AddVehicle(new Bus("BUS451", seatingCapacity: 22)
-        {
-            Color = "Red"
-        });
-        _handler.AddVehicle(new Bus("BUS452", seatingCapacity: 22)
-        {
-            Color = "Red"
-        });
-        _handler.AddVehicle(new Bus("BUS453", seatingCapacity: 18)
-        {
-            Color = "Red"
-        });
-        _handler.AddVehicle(new Bus("BUS454", seatingCapacity: 92)
-        {
-            Color = "White"
-        });
-        _ui.WriteLine("Mock vehicles added to the garage.");
+            try
+            {
+                _handler.AddVehicle(vehicle);
+                total++;
+            }
+            catch (Exception e)
+            {
+                _ui.WriteError($"{e.Message} while adding {vehicle}");
+            }
+        }
+        _ui.WriteLine($"Added {total} mock vehicles.");
     }
 }

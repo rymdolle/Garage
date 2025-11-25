@@ -1,11 +1,11 @@
 ﻿namespace Garage.UserInterface;
 
-public class Menu(string title, Action<IUserInterface>? action = null)
+public class Menu(string title, Action<Menu>? action = null)
 {
     public string Title { get; } = title;
-    public Menu? Parent { get; protected set; }
+    public Menu? Parent { get; set; }
     public List<Menu> Children { get; } = [];
-    public Action<IUserInterface>? Action { get; } = action;
+    public Action<Menu>? Action { get; } = action;
 
     public void AddChild(Menu child)
     {
@@ -33,14 +33,16 @@ public class Menu(string title, Action<IUserInterface>? action = null)
 
         PrintBreadcrums(ui);
 
-        Action?.Invoke(ui);
+        Action?.Invoke(this);
 
-        // Enumerate options and add back/exit option
-        var options = Children.Select((m, index) => (index + 1, m.Title)).ToList();
-        options.Add((0, Parent != null ? "Back" : "Exit"));
-
-        int choice = ui.SelectMenuOption("Select option:", options.ToArray(), "Invalid selection. Please try again.");
-        if (Children.Count == 0 || choice == 0)
+        if (Children.Count == 0)
+        {
+            ui.WriteLine("Press Enter to go back...");
+            ui.ReadLine();
+            return Parent;
+        }
+        int choice = ui.SelectMenuOption("Select option:", this, "Invalid selection. Please try again.");
+        if (choice == 0)
             return Parent;
 
         return Children[choice - 1];

@@ -4,7 +4,13 @@ namespace Garage;
 
 public class GarageHandler : IHandler
 {
-    Garage<Vehicle> _garage = new(199);
+    private Garage<Vehicle> _garage = null!;
+
+    public void CreateGarage(int capacity)
+    {
+        _garage = new Garage<Vehicle>(capacity);
+    }
+
     public void AddVehicle(Vehicle vehicle)
     {
         _garage.Add(vehicle);
