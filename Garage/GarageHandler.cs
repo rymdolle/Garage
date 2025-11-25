@@ -19,16 +19,17 @@ public class GarageHandler : IHandler
         throw new NotImplementedException();
     }
 
-    public int GetVehicleCountByType(string type)
-    {
-        throw new NotImplementedException();
-    }
-
     public bool RemoveVehicle(Vehicle vehicle)
     {
         throw new NotImplementedException();
     }
 
+    /// <summary>
+    /// Search for vehicles by color, type, or registration number.
+    /// For example color=red,blue type=car,boat regnr=ABC123
+    /// </summary>
+    /// <param name="query"></param>
+    /// <returns></returns>
     public IEnumerable<Vehicle> SearchVehicle(string query)
     {
         throw new NotImplementedException();

@@ -40,6 +40,11 @@ public class ConsoleUserInterface : IUserInterface
         Console.WriteLine(message);
     }
 
+    public void Write(string message)
+    {
+        Console.Write(message);
+    }
+
     public void WriteError(string message)
     {
         Console.ForegroundColor = ConsoleColor.Red;
