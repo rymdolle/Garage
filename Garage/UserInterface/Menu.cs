@@ -1,11 +1,11 @@
 ﻿namespace Garage.UserInterface;
 
-public class Menu(string title, Action<Menu>? action = null)
+public class Menu(string title, Action? action = null)
 {
     public string Title { get; } = title;
     public Menu? Parent { get; set; }
     public List<Menu> Children { get; } = [];
-    public Action<Menu>? Action { get; } = action;
+    public Action? Action { get; } = action;
 
     public void AddChild(Menu child)
     {
@@ -33,7 +33,7 @@ public class Menu(string title, Action<Menu>? action = null)
 
         PrintBreadcrums(ui);
 
-        Action?.Invoke(this);
+        Action?.Invoke();
 
         if (Children.Count == 0)
         {

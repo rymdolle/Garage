@@ -52,14 +52,14 @@ public class Manager
         }
     }
 
-    private void CreateCar(Menu parent)
+    private void CreateCar()
     {
         string regnr = _ui.ReadString("Enter registration number:", c => c != string.Empty, "Regnr can't be empty");
         string body = _ui.ReadString("Enter body type:", c => c != string.Empty, "Body type can't be empty");
         _handler.AddVehicle(new Car(regnr, body));
         _ui.WriteLine("Car created.");
     }
-    private void CreateMotorcycle(Menu menu)
+    private void CreateMotorcycle()
     {
         string regnr = _ui.ReadString("Enter registration number:", c => c != string.Empty, "Regnr can't be empty");
         int leanAngle = _ui.ReadInt("Enter max lean angle:", c => c > 0, "Lean angle has to be an integer greater than 0");
@@ -68,7 +68,7 @@ public class Manager
 
     }
 
-    private void CreateBus(Menu menu)
+    private void CreateBus()
     {
         string regnr = _ui.ReadString("Enter registration number:", c => c != string.Empty, "Regnr can't be empty");
         int seats = _ui.ReadInt("Enter seat capacity:", c => c > 0, "Capacity has to be an integer greater than 0");
@@ -76,7 +76,7 @@ public class Manager
         _ui.WriteLine("Bus created.");
     }
 
-    private void CreateAirplane(Menu menu)
+    private void CreateAirplane()
     {
         string regnr = _ui.ReadString("Enter registration number:", c => c != string.Empty, "Regnr can't be empty");
         int wingspan = _ui.ReadInt("Enter wing span:", c => c > 0, "Wing span has to be an integer greater than 0");
@@ -84,7 +84,7 @@ public class Manager
         _ui.WriteLine("Airplane created.");
     }
 
-    private void CreateBoat(Menu menu)
+    private void CreateBoat()
     {
         string regnr = _ui.ReadString("Enter registration number:", c => c != string.Empty, "Regnr can't be empty");
         int displacement = _ui.ReadInt("Enter displacement:", c => c > 0, "Displacement has to be an integer greater than 0");
@@ -93,7 +93,7 @@ public class Manager
     }
 
 
-    private void RemoveVehicle(Menu parent)
+    private void RemoveVehicle()
     {
         _ui.WriteLine("Enter registration number of the vehicle to remove:");
         string regnr = _ui.ReadLine();
@@ -113,7 +113,7 @@ public class Manager
         }
     }
 
-    private void SearchVehicle(Menu parent)
+    private void SearchVehicle()
     {
         _ui.WriteLine("Enter search query (e.g., color=red type=car regnr=ABC123):");
         string query = _ui.ReadLine();
@@ -131,7 +131,7 @@ public class Manager
         }
     }
 
-    private void ListAllVehicles(Menu parent)
+    private void ListAllVehicles()
     {
         var vehicles = _handler.GetAllVehicles();
         if (!vehicles.Any())
@@ -145,7 +145,7 @@ public class Manager
         }
     }
 
-    private void CreateMockVehicles(Menu parent)
+    private void CreateMockVehicles()
     {
         Vehicle[] vehicles = [
             new Car("ABC123", "Sedan")
