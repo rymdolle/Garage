@@ -15,21 +15,20 @@ public class Manager
 
     internal void Run()
     {
-        Menu? menu = new ConsoleMenu("Main Menu", [
-            new ConsoleMenu("List all vehicles", ListAllVehicles),
-            new ConsoleMenu("Park vehicle", AddVehicle),
-            new ConsoleMenu("Remove vehicle", RemoveVehicle),
-            new ConsoleMenu("Search vehicle", SearchVehicle),
-            new ConsoleMenu("Mock vehicles", CreateMockVehicles),
+        Menu mainMenu = new Menu("Main menu");
+        Menu? menu = new Menu("Main Menu", [
+            new Menu("List all vehicles", ListAllVehicles),
+            new Menu("Park vehicle", AddVehicle),
+            new Menu("Remove vehicle", RemoveVehicle),
+            new Menu("Search vehicle", SearchVehicle),
+            new Menu("Mock vehicles", CreateMockVehicles),
             ]
         );
-        do
+        while (menu != null)
         {
-            try
-            {
-                menu = menu.Navigate(_ui);
-            }
-            catch (Exception ex)
+            menu = menu.Navigate(_ui);
+        }
+    }
             {
                 _ui.WriteError($"An error occurred: {ex.Message}");
             }
@@ -53,25 +52,24 @@ public class Manager
             return;
         ui.WriteLine("Enter registration number:");
         string regnr = ui.ReadLine();
-        Vehicle vehicle = choice switch
-        {
-            1 => new Car(regnr),
-            2 => new Motorcycle(regnr),
-            3 => new Bus(regnr),
-            4 => new Airplane(regnr),
-            5 => new Boat(regnr),
-            _ => throw new InvalidOperationException("Invalid vehicle type selected.")
-        };
         try
         {
+            Vehicle vehicle = choice switch
+            {
+                1 => new Car(regnr, Car.BodyType.Undefined),
+                2 => new Motorcycle(regnr, maxLeanAngle: 24),
+                3 => new Bus(regnr, seatingCapacity: 12),
+                4 => new Airplane(regnr, wingspan: 10),
+                5 => new Boat(regnr, displacement: 40),
+                _ => throw new InvalidOperationException("Invalid vehicle type selected.")
+            };
             _handler.AddVehicle(vehicle);
+            ui.WriteLine($"Vehicle {vehicle} parked in the garage.");
         }
-        catch (InvalidOperationException ex)
+        catch (Exception ex)
         {
-            ui.WriteError(ex.Message);
-            return;
+            ui.WriteError($"Error parking vehicle: {ex.Message}");
         }
-        ui.WriteLine($"Vehicle {vehicle} parked in the garage.");
     }
 
     private void RemoveVehicle(IUserInterface ui)
@@ -84,10 +82,9 @@ public class Manager
             ui.WriteError($"No vehicle found with registration number {regnr}.");
             return;
         }
-        bool removed = _handler.RemoveVehicle(vehicle);
-        if (removed)
+        if (_handler.RemoveVehicle(vehicle))
         {
-            ui.WriteLine($"Vehicle {vehicle} removed from the garage.");
+            ui.WriteLine($"Vehicle {vehicle.RegistrationNumber} removed from the garage.");
         }
         else
         {
@@ -129,9 +126,46 @@ public class Manager
 
     private void CreateMockVehicles(IUserInterface ui)
     {
-        _handler.AddVehicle(new Car("ABC123"));
-        _handler.AddVehicle(new Motorcycle("XYZ789"));
-        _handler.AddVehicle(new Bus("BUS456"));
+        _handler.AddVehicle(new Car("ABC123", Car.BodyType.Hatchback)
+        {
+            Color = "Red"
+        });
+        _handler.AddVehicle(new Motorcycle("XYZ789", maxLeanAngle: 24)
+        {
+            Color = "Black"
+        });
+        _handler.AddVehicle(new Bus("BUS456", seatingCapacity: 56)
+        {
+            Color = "Blue"
+        });
+        _handler.AddVehicle(new Bus("BUS457", seatingCapacity: 56)
+        {
+            Color = "Green"
+        });
+        _handler.AddVehicle(new Bus("BUS458", seatingCapacity: 40)
+        {
+            Color = "Yellow"
+        });
+        _handler.AddVehicle(new Bus("BUS459", seatingCapacity: 32)
+        {
+            Color = "Yellow"
+        });
+        _handler.AddVehicle(new Bus("BUS451", seatingCapacity: 22)
+        {
+            Color = "Red"
+        });
+        _handler.AddVehicle(new Bus("BUS452", seatingCapacity: 22)
+        {
+            Color = "Red"
+        });
+        _handler.AddVehicle(new Bus("BUS453", seatingCapacity: 18)
+        {
+            Color = "Red"
+        });
+        _handler.AddVehicle(new Bus("BUS454", seatingCapacity: 92)
+        {
+            Color = "White"
+        });
         _ui.WriteLine("Mock vehicles added to the garage.");
     }
 }

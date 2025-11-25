@@ -1,8 +1,8 @@
 ﻿namespace Garage.Vehicles;
 
-public class Boat(string regnr) : Vehicle(regnr)
+public class Boat(string regnr, int displacement) : Vehicle(regnr)
 {
-    public int Displacement { get; set; }
+    public int Displacement { get; set; } = displacement;
 
     public override string ToString()
     {

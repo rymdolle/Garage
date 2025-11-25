@@ -1,8 +1,8 @@
 ﻿namespace Garage.Vehicles;
 
-public class Car(string regnr) : Vehicle(regnr)
+public class Car(string regnr, Car.BodyType body) : Vehicle(regnr)
 {
-    public BodyType Body { get; set; }
+    public BodyType Body { get; set; } = body;
     public override string ToString()
     {
         return @$"{GetType().Name} - RegNr: {RegistrationNumber}, BodyType: {Body}";
