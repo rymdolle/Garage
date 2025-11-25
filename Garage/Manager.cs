@@ -16,10 +16,16 @@ public class Manager
 
         _mainMenu = new("Garage", [
             new Menu("List all vehicles", ListAllVehicles),
-            new Menu("Park vehicle", AddVehicle),
+            new Menu("Park vehicle", [
+                new Menu("Car", CreateCar),
+                new Menu("Motorcycle", CreateMotorcycle),
+                new Menu("Bus", CreateBus),
+                new Menu("Airplane", CreateAirplane),
+                new Menu("Boat", CreateBoat),
+            ]),
             new Menu("Remove vehicle", RemoveVehicle),
             new Menu("Search vehicle", SearchVehicle),
-            new Menu("Mock vehicles", CreateMockVehicles),
+            new Menu("Create mock vehicles", CreateMockVehicles),
             ]);
     }
 
@@ -32,29 +38,17 @@ public class Manager
         Menu? menu = _mainMenu;
         while (menu != null)
         {
-            menu = menu.Navigate(_ui);
-        }
-    }
-
-    private void AddVehicle(Menu parent)
-    {
-        var options = new Menu("Add vehicle", [
-            new Menu("Car", CreateCar),
-            new Menu("Motorcycle", CreateMotorcycle),
-            new Menu("Bus", CreateBus),
-            new Menu("Airplane", CreateAirplane),
-            new Menu("Boat", CreateBoat),
-        ]);
-        options.Parent = parent;
-        Menu? menu = options;
-        try
-        {
-            while (menu != null && menu != parent)
+            try
+            {
                 menu = menu.Navigate(_ui);
-        }
-        catch (Exception e)
-        {
-            _ui.WriteError(e.Message);
+            }
+            catch (Exception e)
+            {
+                _ui.WriteError(e.Message);
+                _ui.WriteLine("Press enter to return to main menu...");
+                _ui.ReadLine();
+                menu = _mainMenu;
+            }
         }
     }
 
@@ -68,7 +62,7 @@ public class Manager
     private void CreateMotorcycle(Menu menu)
     {
         string regnr = _ui.ReadString("Enter registration number:", c => c != string.Empty, "Regnr can't be empty");
-        int leanAngle = _ui.ReadInt("Enter max lean angle:", c => c > 0, "Lean angle has to be more than 0");
+        int leanAngle = _ui.ReadInt("Enter max lean angle:", c => c > 0, "Lean angle has to be an integer greater than 0");
         _handler.AddVehicle(new Motorcycle(regnr, leanAngle));
         _ui.WriteLine("Motorcycle created.");
 
@@ -77,7 +71,7 @@ public class Manager
     private void CreateBus(Menu menu)
     {
         string regnr = _ui.ReadString("Enter registration number:", c => c != string.Empty, "Regnr can't be empty");
-        int seats = _ui.ReadInt("Enter seat capacity:", c => c > 0, "Capacity has to be more than 0");
+        int seats = _ui.ReadInt("Enter seat capacity:", c => c > 0, "Capacity has to be an integer greater than 0");
         _handler.AddVehicle(new Motorcycle(regnr, seats));
         _ui.WriteLine("Bus created.");
     }
@@ -85,7 +79,7 @@ public class Manager
     private void CreateAirplane(Menu menu)
     {
         string regnr = _ui.ReadString("Enter registration number:", c => c != string.Empty, "Regnr can't be empty");
-        int wingspan = _ui.ReadInt("Enter wing span:", c => c > 0, "Wing span has to be more than 0");
+        int wingspan = _ui.ReadInt("Enter wing span:", c => c > 0, "Wing span has to be an integer greater than 0");
         _handler.AddVehicle(new Airplane(regnr, wingspan));
         _ui.WriteLine("Airplane created.");
     }
@@ -93,7 +87,7 @@ public class Manager
     private void CreateBoat(Menu menu)
     {
         string regnr = _ui.ReadString("Enter registration number:", c => c != string.Empty, "Regnr can't be empty");
-        int displacement = _ui.ReadInt("Enter displacement:", c => c > 0, "displacement has to be more than 0");
+        int displacement = _ui.ReadInt("Enter displacement:", c => c > 0, "Displacement has to be an integer greater than 0");
         _handler.AddVehicle(new Boat(regnr, displacement));
         _ui.WriteLine("Boat created.");
     }
