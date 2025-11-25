@@ -24,11 +24,6 @@ public class GarageHandler : IHandler
         throw new NotImplementedException();
     }
 
-    public string[] GetVehicleTypes()
-    {
-        throw new NotImplementedException();
-    }
-
     public bool RemoveVehicle(Vehicle vehicle)
     {
         throw new NotImplementedException();
