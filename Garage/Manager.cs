@@ -1,4 +1,5 @@
-﻿using Garage.UserInterface;
+﻿using Garage.Extensions;
+using Garage.UserInterface;
 using Garage.Vehicles;
 
 namespace Garage;
@@ -95,7 +96,7 @@ public class Manager
                 throw new NotImplementedException($"Vehicle type {typeof(T).Name} not implemented in CreateVehicle"),
         };
 
-        vehicle.Color = _ui.ReadString("Color:");
+        vehicle.Color = _ui.ReadString("Color:").ValueOrDefault();
 
         _ui.WriteLine(vehicle.ToString());
         string confirm = _ui.ReadString("Is this correct? Y/n");
