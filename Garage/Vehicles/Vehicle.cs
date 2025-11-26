@@ -6,6 +6,7 @@ public abstract class Vehicle(string regnr)
     public string RegistrationNumber { get; protected set; } = regnr;
     public override string ToString()
     {
-        return $"{GetType().Name} - RegNr: {RegistrationNumber}, Color: {Color}";
+        string color = (Color == null || Color == string.Empty) ? "N/A" : Color;
+        return $"{GetType().Name} - RegNr: {RegistrationNumber}, Color: {color}";
     }
 }
