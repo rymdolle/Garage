@@ -1,8 +1,8 @@
 ﻿namespace Garage.Vehicles;
 
-public abstract class Vehicle(string regnr, string? color = null)
+public abstract class Vehicle(string regnr)
 {
-    public string? Color { get; set; } = color;
+    public string? Color { get; set; }
     public string RegistrationNumber { get; protected set; } = regnr;
     public override string ToString()
     {
