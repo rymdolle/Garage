@@ -65,4 +65,18 @@ public class GarageHandler : IHandler
 
         return result;
     }
+
+    public Dictionary<string, int> VehicleCountByType()
+    {
+        Dictionary<string, int> counts = [];
+        foreach (var vehicle in _garage)
+        {
+            string type = vehicle.GetType().Name;
+            if (counts.TryGetValue(type, out int value))
+                counts[type] = ++value;
+            else
+                counts[type] = 1;
+        }
+        return counts;
+    }
 }

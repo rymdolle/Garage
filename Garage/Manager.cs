@@ -16,6 +16,7 @@ public class Manager
 
         _mainMenu = new("Garage", [
             new Menu("List all vehicles", ListAllVehicles),
+            new Menu("List vehicle count by type", ListVehicleCountByType),
             new Menu("Park vehicle", [
                 new Menu("Car", CreateCar),
                 new Menu("Motorcycle", CreateMotorcycle),
@@ -29,11 +30,20 @@ public class Manager
             ]);
     }
 
+    private void ListVehicleCountByType()
+    {
+        foreach (var (key, value) in _handler.VehicleCountByType())
+        {
+            _ui.WriteLine($"{key}: {value}");
+        }
+    }
+
     public void Run()
     {
         _ui.WriteLine("Welcome to Parkin Garage Application!");
         int capacity = _ui.ReadInt("Choose garage capacity:", c => c > 0, "Capacity has to be more than 0");
         _handler.CreateGarage(capacity);
+        _mainMenu.Title += $" ({capacity})";
 
         Menu? menu = _mainMenu;
         while (menu != null)

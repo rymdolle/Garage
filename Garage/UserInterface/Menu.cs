@@ -2,7 +2,7 @@
 
 public class Menu(string title, Action? action = null)
 {
-    public string Title { get; } = title;
+    public string Title { get; set; } = title;
     public Menu? Parent { get; set; }
     public List<Menu> Children { get; } = [];
     public Action? Action { get; } = action;

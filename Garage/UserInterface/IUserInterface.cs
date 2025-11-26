@@ -9,5 +9,5 @@ public interface IUserInterface
     public int SelectMenuOption(string prompt, Menu options, string errorMessage);
     public void WriteError(string message);
     int ReadInt(string prompt, Predicate<int> constraint, string errorMessage);
-    string ReadString(string prompt, Predicate<string> constraint, string errorMessage);
+    string ReadString(string prompt, Predicate<string>? constraint = null, string? errorMessage = null);
 }

@@ -55,7 +55,7 @@ public class ConsoleUserInterface : IUserInterface
         while (true)
         {
             WriteLine(prompt);
-            if (int.TryParse(ReadLine(), out int result) && constraint(result))
+            if (int.TryParse(ReadLine(), out int result) && constraint.Invoke(result))
             {
                 return result;
             }
@@ -63,17 +63,18 @@ public class ConsoleUserInterface : IUserInterface
         }
     }
 
-    public string ReadString(string prompt, Predicate<string> constraint, string errorMessage)
+    public string ReadString(string prompt, Predicate<string>? constraint, string? errorMessage)
     {
         while (true)
         {
             WriteLine(prompt);
             string input = ReadLine();
-            if (constraint(input))
+            if (constraint?.Invoke(input) ?? true)
             {
                 return input;
             }
-            WriteError(errorMessage);
+            if (errorMessage != null)
+                WriteError(errorMessage);
         }
     }
 }
