@@ -32,10 +32,15 @@ public class Manager
 
     private void ListVehicleCountByType()
     {
-        foreach (var (key, value) in _handler.VehicleCountByType())
+        var vehicleCounts = _handler.VehicleCountByType();
+        foreach (var (key, value) in vehicleCounts)
         {
             _ui.WriteLine($"{key}: {value}");
         }
+
+        int total = vehicleCounts.Sum(entry => entry.Value);
+        _ui.WriteLine($"Total: {total}");
+
     }
 
     public void Run()
