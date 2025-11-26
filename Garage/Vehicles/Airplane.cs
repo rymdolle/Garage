@@ -6,6 +6,6 @@ public class Airplane(string regnr, int wingspan) : Vehicle(regnr)
 
     public override string ToString()
     {
-        return @$"{GetType().Name} - RegNr: {RegistrationNumber} - WingSpan: {WingSpan}";
+        return $"{base.ToString()}, WingSpan: {WingSpan}";
     }
 }

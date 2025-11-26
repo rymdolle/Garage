@@ -6,6 +6,6 @@ public class Boat(string regnr, int displacement) : Vehicle(regnr)
 
     public override string ToString()
     {
-        return @$"{GetType().Name} - RegNr: {RegistrationNumber} - Displacement: {Displacement}";
+        return $"{base.ToString()}, Displacement: {Displacement}";
     }
 }

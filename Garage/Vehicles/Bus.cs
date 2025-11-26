@@ -5,6 +5,6 @@ public class Bus(string regnr, int seatingCapacity) : Vehicle(regnr)
     public int SeatingCapacity { get; set; } = seatingCapacity;
     public override string ToString()
     {
-        return @$"{GetType().Name} - RegNr: {RegistrationNumber} - SeatingCapacity: {SeatingCapacity}";
+        return $"{base.ToString()}, SeatingCapacity: {SeatingCapacity}";
     }
 }

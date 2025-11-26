@@ -6,6 +6,6 @@ public class Motorcycle(string regnr, int maxLeanAngle) : Vehicle(regnr)
 
     public override string ToString()
     {
-        return @$"{GetType().Name} - RegNr: {RegistrationNumber} - MaxLeanAngle: {MaxLeanAngle}";
+        return $"{base.ToString()}, MaxLeanAngle: {MaxLeanAngle}";
     }
 }
