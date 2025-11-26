@@ -18,11 +18,11 @@ public class Manager
             new Menu("List all vehicles", ListAllVehicles),
             new Menu("List vehicle count by type", ListVehicleCountByType),
             new Menu("Park vehicle", [
-                new Menu("Car", CreateCar),
-                new Menu("Motorcycle", CreateMotorcycle),
-                new Menu("Bus", CreateBus),
-                new Menu("Airplane", CreateAirplane),
-                new Menu("Boat", CreateBoat),
+                new Menu("Car", ParkVehicle<Car>),
+                new Menu("Motorcycle", ParkVehicle<Motorcycle>),
+                new Menu("Bus", ParkVehicle<Bus>),
+                new Menu("Airplane", ParkVehicle<Airplane>),
+                new Menu("Boat", ParkVehicle<Boat>),
             ]),
             new Menu("Remove vehicle", RemoveVehicle),
             new Menu("Search vehicle", SearchVehicle),
@@ -67,44 +67,41 @@ public class Manager
         }
     }
 
-    private void CreateCar()
+    private void ParkVehicle<T>() where T : Vehicle
     {
-        string regnr = _ui.ReadString("Enter registration number:", c => c != string.Empty, "Regnr can't be empty");
-        string body = _ui.ReadString("Enter body type:", c => c != string.Empty, "Body type can't be empty");
-        _handler.AddVehicle(new Car(regnr, body));
-        _ui.WriteLine("Car created.");
-    }
-    private void CreateMotorcycle()
-    {
-        string regnr = _ui.ReadString("Enter registration number:", c => c != string.Empty, "Regnr can't be empty");
-        int leanAngle = _ui.ReadInt("Enter max lean angle:", c => c > 0, "Lean angle has to be an integer greater than 0");
-        _handler.AddVehicle(new Motorcycle(regnr, leanAngle));
-        _ui.WriteLine("Motorcycle created.");
+        string regnr = _ui.ReadString("Registration number (empty to abort):", c => _handler.GetVehicleByRegNr(c) == null, "Registration number has to be unique");
+        if (regnr == string.Empty)
+        {
+            _ui.WriteError("Aborted.");
+            return;
+        }
+        Vehicle vehicle = typeof(T) switch
+        {
+            Type t when t == typeof(Car) =>
+                new Car(regnr, _ui.ReadString("Body type:", c => c != string.Empty, "Body type can't be empty")),
+            Type t when t == typeof(Motorcycle) =>
+                new Motorcycle(regnr, _ui.ReadInt("Max lean angle:", c => c > 0, "Max lean angle has to be an integer greater than 0")),
+            Type t when t == typeof(Bus) =>
+                new Bus(regnr, _ui.ReadInt("Seat capacity:", c => c > 0, "Capacity has to be an integer greater than 0")),
+            Type t when t == typeof(Airplane) =>
+                new Airplane(regnr, _ui.ReadInt("Wing span:", c => c > 0, "Wing span has to be an integer greater than 0")),
+            Type t when t == typeof(Boat) =>
+                new Boat(regnr, _ui.ReadInt("Displacement:", c => c > 0, "Displacement has to be an integer greater than 0")),
+            _ =>
+                throw new NotImplementedException($"Vehicle type {typeof(T).Name} not implemented in CreateVehicle"),
+        };
 
-    }
+        vehicle.Color = _ui.ReadString("Color:");
 
-    private void CreateBus()
-    {
-        string regnr = _ui.ReadString("Enter registration number:", c => c != string.Empty, "Regnr can't be empty");
-        int seats = _ui.ReadInt("Enter seat capacity:", c => c > 0, "Capacity has to be an integer greater than 0");
-        _handler.AddVehicle(new Motorcycle(regnr, seats));
-        _ui.WriteLine("Bus created.");
-    }
-
-    private void CreateAirplane()
-    {
-        string regnr = _ui.ReadString("Enter registration number:", c => c != string.Empty, "Regnr can't be empty");
-        int wingspan = _ui.ReadInt("Enter wing span:", c => c > 0, "Wing span has to be an integer greater than 0");
-        _handler.AddVehicle(new Airplane(regnr, wingspan));
-        _ui.WriteLine("Airplane created.");
-    }
-
-    private void CreateBoat()
-    {
-        string regnr = _ui.ReadString("Enter registration number:", c => c != string.Empty, "Regnr can't be empty");
-        int displacement = _ui.ReadInt("Enter displacement:", c => c > 0, "Displacement has to be an integer greater than 0");
-        _handler.AddVehicle(new Boat(regnr, displacement));
-        _ui.WriteLine("Boat created.");
+        _ui.WriteLine(vehicle.ToString());
+        string confirm = _ui.ReadString("Is this correct? Y/n");
+        if (confirm.ToLower().Equals("n"))
+        {
+            _ui.WriteError("Aborted.");
+            return;
+        }
+        _handler.AddVehicle(vehicle);
+        _ui.WriteLine($"{vehicle.GetType().Name} created.");
     }
 
 
