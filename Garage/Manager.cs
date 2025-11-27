@@ -169,43 +169,81 @@ public class Manager
         Vehicle[] vehicles = [
             new Car("ABC123", "Sedan")
             {
-                Color = "Red"
+                Color = "Red",
+                Make = "Toyota",
+                Model = "Camry",
+            },
+            new Car("DEF456", "SUV")
+            {
+                Color = "Blue",
+                Make = "Honda",
+                Model = "CR-V",
             },
             new Motorcycle("XYZ789", maxLeanAngle: 24)
             {
-                Color = "Black"
+                Color = "Black",
+                Make = "Yamaha",
+                Model = "YZF-R3",
+            },
+            new Motorcycle("MOTO123", maxLeanAngle: 30)
+            {
+                Color = "Red",
+                Make = "Ducati",
+                Model = "Panigale V2",
             },
             new Bus("BUS456", seatingCapacity: 56)
             {
-                Color = "Blue"
+                Color = "Blue",
+                Make = "Mercedes-Benz",
+                Model = "Citaro",
             },
-            new Bus("BUS457", seatingCapacity: 56)
+            new Bus("BUS123", seatingCapacity: 56)
             {
-                Color = "Green"
+                Color = "Green",
+                Make = "Volvo",
+                Model = "7900 Electric",
             },
-            new Bus("BUS458", seatingCapacity: 40)
+            new Bus("BUS789", seatingCapacity: 40)
             {
-                Color = "Yellow"
+                Color = "Yellow",
+                Make = "Scania",
+                Model = "Citywide",
             },
-            new Bus("BUS459", seatingCapacity: 32)
+            new Airplane("AIR123", wingspan: 60)
             {
-                Color = "Yellow"
+                Color = "White",
+                Make = "Boeing",
+                Model = "737",
             },
-            new Bus("BUS451", seatingCapacity: 22)
+            new Airplane("AIR456", wingspan: 45)
             {
-                Color = "Red"
+                Color = "Gray",
+                Make = "Airbus",
+                Model = "A320",
             },
-            new Bus("BUS452", seatingCapacity: 22)
+            new Airplane("AIR789", wingspan: 35)
             {
-                Color = "Red"
+                Color = "Silver",
+                Make = "Cessna",
+                Model = "172",
             },
-            new Bus("BUS453", seatingCapacity: 18)
+            new Boat("BOAT123", displacement: 3000)
             {
-                Color = "Red"
+                Color = "White",
+                Make = "Bayliner",
+                Model = "Element E18",
             },
-            new Bus("BUS454", seatingCapacity: 92)
+            new Boat("BOAT456", displacement: 5000)
             {
-                Color = "White"
+                Color = "Blue",
+                Make = "Yamaha",
+                Model = "212X",
+            },
+            new Boat("BOAT789", displacement: 7000)
+            {
+                Color = "Red",
+                Make = "Sea Ray",
+                Model = "SPX 190",
             },
             ];
         int total = 0;
