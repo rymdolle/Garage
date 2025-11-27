@@ -74,7 +74,7 @@ public class Manager
 
     private void ParkVehicle<T>() where T : Vehicle
     {
-        string regnr = _ui.ReadString("Registration number (empty to abort):", c => _handler.GetVehicleByRegNr(c) == null, "Registration number has to be unique");
+        string regnr = _ui.ReadString("Registration number (empty to abort):", c => c == string.Empty || _handler.GetVehicleByRegNr(c) == null, "Registration number has to be unique");
         if (regnr == string.Empty)
         {
             _ui.WriteError("Aborted.");
@@ -106,7 +106,7 @@ public class Manager
             return;
         }
         _handler.AddVehicle(vehicle);
-        _ui.WriteLine($"{vehicle.GetType().Name} created.");
+        _ui.WriteLine($"{vehicle.GetType().Name} parked.");
     }
 
 
