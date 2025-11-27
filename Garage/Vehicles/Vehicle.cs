@@ -1,4 +1,6 @@
-﻿namespace Garage.Vehicles;
+﻿using System.Text;
+
+namespace Garage.Vehicles;
 
 public abstract class Vehicle(string regnr)
 {
@@ -8,7 +10,22 @@ public abstract class Vehicle(string regnr)
     public string RegistrationNumber { get; protected set; } = regnr;
     public override string ToString()
     {
-        string color = (Color == null || Color == string.Empty) ? "N/A" : Color;
-        return $"{GetType().Name} - RegNr: {RegistrationNumber}, Color: {color}";
+        StringBuilder sb = new($"{GetType().Name} - RegNr: {RegistrationNumber}");
+        if (Make != null && Make != string.Empty)
+        {
+            sb.Append($", Make: {Make}");
+        }
+
+        if (Model != null && Model != string.Empty)
+        {
+            sb.Append($", Model: {Model}");
+        }
+
+        if (Color != null && Color != string.Empty)
+        {
+            sb.Append($", Color: {Color}");
+        }
+
+        return sb.ToString();
     }
 }

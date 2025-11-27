@@ -58,6 +58,12 @@ public class GarageHandler : IHandler
                 case "regnr":
                     result = result.Where(v => filter.Value.Contains(v.RegistrationNumber.ToLower()));
                     break;
+                case "make":
+                    result = result.Where(v => filter.Value.Contains(v.Make?.ToLower() ?? string.Empty));
+                    break;
+                case "model":
+                    result = result.Where(v => filter.Value.Contains(v.Model?.ToLower() ?? string.Empty));
+                    break;
                 default:
                     break;
             }
