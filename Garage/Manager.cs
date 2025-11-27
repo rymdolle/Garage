@@ -49,7 +49,7 @@ public class Manager
         int capacity = _ui.ReadInt("Choose garage capacity:", c => c > 0, "Capacity has to be more than 0");
         _handler.CreateGarage(capacity);
         _mainMenu.Title += $" ({capacity})";
-        if (_ui.ReadString("Do you want to populate with demo vehicles? y/N").Equals("y", StringComparison.CurrentCultureIgnoreCase))
+        if (_ui.ReadString("Do you want to populate with demo vehicles? [y/N]").Equals("y", StringComparison.CurrentCultureIgnoreCase))
         {
             CreateMockVehicles();
             _ui.ReadString("Press enter to continue...");
@@ -96,10 +96,12 @@ public class Manager
                 throw new NotImplementedException($"Vehicle type {typeof(T).Name} not implemented in CreateVehicle"),
         };
 
-        vehicle.Color = _ui.ReadString("Color:").ValueOrDefault();
+        vehicle.Make = _ui.ReadString("Make [Enter to skip]:").ValueOrDefault();
+        vehicle.Model = _ui.ReadString("Model [Enter to skip]:").ValueOrDefault();
+        vehicle.Color = _ui.ReadString("Color [Enter to skip]:").ValueOrDefault();
 
         _ui.WriteLine(vehicle.ToString());
-        string confirm = _ui.ReadString("Is this correct? Y/n");
+        string confirm = _ui.ReadString("Is this correct? [Y/n]");
         if (confirm.ToLower().Equals("n"))
         {
             _ui.WriteError("Aborted.");
