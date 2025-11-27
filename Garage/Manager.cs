@@ -1,6 +1,7 @@
 ﻿using Garage.Extensions;
 using Garage.UserInterface;
 using Garage.Vehicles;
+using Microsoft.Extensions.Configuration;
 
 namespace Garage;
 
@@ -8,12 +9,14 @@ public class Manager
 {
     private IUserInterface _ui;
     private IHandler _handler;
+    private IConfiguration _config;
 
     private Menu _mainMenu;
-    public Manager(IUserInterface ui, IHandler handler)
+    public Manager(IConfiguration config, IUserInterface ui, IHandler handler)
     {
         _ui = ui;
         _handler = handler;
+        _config = config;
 
         _mainMenu = new("Garage", [
             new Menu("List all vehicles", ListAllVehicles),
@@ -49,7 +52,7 @@ public class Manager
         int capacity = _ui.ReadInt("Choose garage capacity:", c => c > 0, "Capacity has to be more than 0");
         _handler.CreateGarage(capacity);
         _mainMenu.Title += $" ({capacity})";
-        if (_ui.ReadString("Do you want to populate with demo vehicles? [y/N]").Equals("y", StringComparison.CurrentCultureIgnoreCase))
+        if (_config.GetValue<bool>("demo", true) && _ui.ReadString("Do you want to populate with demo vehicles? [y/N]").Equals("y", StringComparison.CurrentCultureIgnoreCase))
         {
             CreateMockVehicles();
             _ui.ReadString("Press enter to continue...");
