@@ -10,7 +10,7 @@ internal class Program
     static void Main(string[] args)
     {
         IConfiguration config = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
             .Build();
         var host = Host.CreateDefaultBuilder(args)
             .ConfigureServices(services =>

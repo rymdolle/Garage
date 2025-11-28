@@ -52,7 +52,7 @@ public class Manager
         int capacity = _ui.ReadInt("Choose garage capacity:", c => c > 0, "Capacity has to be more than 0");
         _handler.CreateGarage(capacity);
         _mainMenu.Title += $" ({capacity})";
-        if (_config.GetValue<bool>("demo", true) && _ui.ReadString("Do you want to populate with demo vehicles? [y/N]").Equals("y", StringComparison.CurrentCultureIgnoreCase))
+        if (_config.GetValue<bool>("demo", false) && _ui.ReadString("Do you want to populate with demo vehicles? [y/N]").Equals("y", StringComparison.CurrentCultureIgnoreCase))
         {
             CreateMockVehicles();
             _ui.ReadString("Press enter to continue...");
@@ -137,16 +137,12 @@ public class Manager
 
     private void SearchVehicle()
     {
-        _ui.WriteLine("Enter search query (e.g., color=red type=car regnr=ABC123):");
+        _ui.WriteLine("Enter search query (e.g. color=red,blue,white type=car,airplane regnr=ABC123):");
+        _ui.WriteLine("Available filters: color, type, regnr, make, model");
         string query = _ui.ReadLine();
-        var results = _handler.SearchVehicle(query);
-        if (!results.Any())
-        {
-            _ui.WriteLine("No vehicles found matching the query.");
-            return;
-        }
+        var results = _handler.SearchVehicle(query).ToList();
 
-        _ui.WriteLine("Search Results:");
+        _ui.WriteLine($"Search Results: {results.Count}");
         foreach (var vehicle in results)
         {
             _ui.WriteLine(vehicle.ToString());
