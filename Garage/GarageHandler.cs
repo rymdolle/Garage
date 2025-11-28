@@ -43,7 +43,9 @@ public class GarageHandler : IHandler
             .Select(part => part.Split('=', 2))
             .Where(parts => parts.Length == 2)
             .ToDictionary(parts => parts[0].ToLower(),
-                          parts => parts[1].Split(',', StringSplitOptions.RemoveEmptyEntries).Select(s => s.ToLower()).ToList());
+                          parts => parts[1].Split(',', StringSplitOptions.RemoveEmptyEntries)
+                                           .Select(s => s.ToLower())
+                                           .ToList());
         IEnumerable<Vehicle> result = _garage;
         foreach (var filter in filters)
         {
