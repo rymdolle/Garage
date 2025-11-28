@@ -151,8 +151,8 @@ public class Manager
 
     private void ListAllVehicles()
     {
-        var vehicles = _handler.GetAllVehicles();
-        if (!vehicles.Any())
+        var vehicles = _handler.GetAllVehicles().ToList();
+        if (vehicles.Count == 0)
         {
             _ui.WriteLine("No vehicles parked in the garage.");
             return;
@@ -161,6 +161,7 @@ public class Manager
         {
             _ui.WriteLine(vehicle.ToString());
         }
+        _ui.WriteLine($"Total vehicles: {vehicles.Count}");
     }
 
     private void CreateMockVehicles()
