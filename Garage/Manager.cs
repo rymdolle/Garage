@@ -119,19 +119,13 @@ public class Manager
     {
         _ui.WriteLine("Enter registration number of the vehicle to remove:");
         string regnr = _ui.ReadLine();
-        var vehicle = _handler.GetVehicleByRegNr(regnr);
-        if (vehicle == null)
+        if (_handler.RemoveVehicle(regnr))
         {
-            _ui.WriteError($"No vehicle found with registration number {regnr}.");
-            return;
-        }
-        if (_handler.RemoveVehicle(vehicle))
-        {
-            _ui.WriteLine($"Vehicle {vehicle.RegistrationNumber} removed from the garage.");
+            _ui.WriteLine($"Vehicle {regnr} removed from the garage.");
         }
         else
         {
-            _ui.WriteError($"Failed to remove vehicle {vehicle}.");
+            _ui.WriteError($"Failed to remove vehicle {regnr}.");
         }
     }
 

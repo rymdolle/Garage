@@ -44,7 +44,7 @@ public class GarageTest
         var car = new Car("ABC123", "Sedan");
         garage.Add(car);
         // Act
-        var result = garage.Remove(car);
+        var result = garage.Remove(car.RegistrationNumber);
         // Assert
         Assert.True(result);
         Assert.Equal(0, garage.Count);
@@ -59,7 +59,7 @@ public class GarageTest
         var car2 = new Car("ABC124", "Sedan");
         garage.Add(car1);
         // Act
-        var result = garage.Remove(car2);
+        var result = garage.Remove(car2.RegistrationNumber);
         // Assert
         Assert.False(result);
         Assert.Equal(1, garage.Count);

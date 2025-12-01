@@ -9,6 +9,7 @@ public sealed class Garage<T> : IEnumerable<T> where T : Vehicle
 
     public int Capacity => _parking.Length;
     public int Count { get; private set; }
+    public T? this[string regnr] => GetVehicleByRegNr(regnr);
     public Garage(int capacity)
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(capacity, 1, "Capacity has to be at least 1");
@@ -17,17 +18,8 @@ public sealed class Garage<T> : IEnumerable<T> where T : Vehicle
 
     public IEnumerator<T> GetEnumerator()
     {
-        int index = 0;
-        foreach (var vehicle in _parking)
-        {
-            if (index >= Count)
-                yield break;
-            if (vehicle != null)
-            {
-                index++;
-                yield return vehicle;
-            }
-        }
+        for (int i = 0; i < Count; i++)
+            yield return _parking[i]!;
     }
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
@@ -38,6 +30,7 @@ public sealed class Garage<T> : IEnumerable<T> where T : Vehicle
     /// <returns>Returns vehicle or null</returns>
     public T? GetVehicleByRegNr(string regnr)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(regnr);
         return this.FirstOrDefault(v => regnr.Equals(v.RegistrationNumber, StringComparison.OrdinalIgnoreCase));
     }
 
@@ -48,39 +41,31 @@ public sealed class Garage<T> : IEnumerable<T> where T : Vehicle
     /// <exception cref="InvalidOperationException">Thrown if the garage is full or if a vehicle with the same registration number already exists in the garage.</exception>
     public void Add(T item)
     {
-        ArgumentNullException.ThrowIfNull(item, nameof(item));
+        ArgumentNullException.ThrowIfNull(item);
+        ArgumentException.ThrowIfNullOrWhiteSpace(item.RegistrationNumber);
         if (Count >= Capacity)
             throw new InvalidOperationException("Garage is full");
         if (GetVehicleByRegNr(item.RegistrationNumber) != null)
             throw new InvalidOperationException("RegistrationNumber has to be unique");
 
-        for (int i = 0; i < _parking.Length; i++)
-        {
-            // Insert into first spot that is null
-            if (_parking[i] == null)
-            {
-                _parking[i] = item;
-                Count++;
-                return;
-            }
-        }
-
-        throw new InvalidOperationException("Could not add item");
+        _parking[Count++] = item;
     }
 
     /// <summary>
     /// Remove vehicle from garage.
     /// </summary>
-    /// <param name="item"></param>
+    /// <param name="regnr"></param>
     /// <returns>True if operation is successful</returns>
-    public bool Remove(T item)
+    public bool Remove(string regnr)
     {
-        for (int i = 0; i < _parking.Length; i++)
+        ArgumentException.ThrowIfNullOrWhiteSpace(regnr);
+        for (int i = 0; i < Count; i++)
         {
-            if (_parking[i] == item)
+            if (regnr.Equals(_parking[i]?.RegistrationNumber, StringComparison.OrdinalIgnoreCase))
             {
-                _parking[i] = null;
                 Count--;
+                _parking[i] = _parking[Count];
+                _parking[Count] = null;
                 return true;
             }
         }

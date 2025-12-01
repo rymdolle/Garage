@@ -26,9 +26,9 @@ public class GarageHandler : IHandler
         return _garage;
     }
 
-    public bool RemoveVehicle(Vehicle vehicle)
+    public bool RemoveVehicle(string regnr)
     {
-        return _garage.Remove(vehicle);
+        return _garage.Remove(regnr);
     }
 
     /// <summary>
